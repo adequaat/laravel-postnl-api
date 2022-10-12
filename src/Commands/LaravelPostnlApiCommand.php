@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Adequaat\LaravelPostnlApi\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class LaravelPostnlApiCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'laravel-postnl-api';
 
     public $description = 'My command';
 
