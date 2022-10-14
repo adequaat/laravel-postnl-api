@@ -9,6 +9,7 @@ return [
     ],
 
     'customer'  => [
+        'collection_location'   => env('POSTNL_CUSTOMER_COLLECTION_LOCATION'),
         'code'  => env('POSTNL_CUSTOMER_CODE'),
         'number'    => env('POSTNL_CUSTOMER_NUMBER'),
         'address'   => [
@@ -20,6 +21,7 @@ return [
             'postal_code'   => env('POSTNL_CUSTOMER_POSTAL_CODE'),
             'street'    => env('POSTNL_CUSTOMER_STREET'),
         ],
-    ],
+        'email' => env('POSTNL_CUSTOMER_EMAIL'),
+    ]
 
 ];
