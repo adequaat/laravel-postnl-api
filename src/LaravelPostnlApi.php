@@ -99,4 +99,64 @@ class LaravelPostnlApi
         return collect($responseShipments->Labels)->first()->Content;
 
     }
+
+    /**
+     * @param array|null $barcodes
+     * @param string $printertype
+     * @param array|null $address [AddressType, City, CompanyName, Countrycode, HouseNr, Zipcode, Street]
+     * @param array|null $contact [ContactType, Email, SMSNr]
+     * @param string $productCodeDelivery
+     * @param $reference string|null
+     * @param $remark string|null
+     * @return void
+     */
+    public function generateLabelForMultiCollo(
+        array $barcodes = null,
+        string $printertype = 'GraphicFile|PDF',
+        array  $address = null,
+        array  $contact = null,
+        string $productCodeDelivery = '3085',
+        string $reference = null,
+        string $remark = null,
+    )
+    {
+
+        // Create a shipment for each barcode
+        $shipments = [];
+
+        foreach($barcodes as $index => $barcode) {
+            $shipments[] = [
+                'Addresses' => $address,
+                'Contacts' => $contact,
+                'ProductCodeDelivery' => $productCodeDelivery,
+                'Barcode' => $barcode,
+                'Reference' => $reference,
+                'Remark' => $remark,
+                'Groups' => [
+                    'GroupSequence' => $index,
+                    'GroupType' => '03',
+                    'GroupCount' => count($barcodes),
+                    'MainBarcode' => $barcodes[0],
+                ]
+            ];
+        }
+
+        $response = Http::withHeaders([
+            'apikey' => config('postnl-api.api.key'),
+            'Content-Type' => 'application/json'
+        ])->post(env('POSTNL_API_BASE_URL').'shipment/v2_2/label',
+        [
+            'Customer' => $this->customer,
+            'Message' => [
+                'MessageTimeStamp' => Carbon::now()->format('dd-mm-yyyy hh:mm:ss'),
+                'Printertype' => $printertype,
+            ],
+            'Shipments' => $shipments
+        ]);
+
+        $responseShipments = collect($response->object()->ResponseShipments);
+
+        return $responseShipments;
+
+    }
 }
