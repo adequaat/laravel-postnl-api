@@ -168,7 +168,6 @@ class LaravelPostnlApi
      * @param string $productCodeDelivery
      * @param $reference string|null
      * @param $remark string|null
-     * @param bool $fullLabel
      * @return void
      *
      * This method uses the Confirming API
@@ -179,6 +178,7 @@ class LaravelPostnlApi
      */
     public function confirmShipment(
         string $barcode = null,
+        string $printertype = 'GraphicFile|PDF',
         array  $address = null,
         array  $contact = null,
         string $productCodeDelivery = '3085',
@@ -209,6 +209,8 @@ class LaravelPostnlApi
 
         if($response->successful()) {
             return collect($response->object()->ResponseShipments)->first();
+        } else {
+            abort(500, 'PostNL API Error: '.$response->object()->ErrorMessage->Description);
         }
 
     }
