@@ -210,7 +210,7 @@ class LaravelPostnlApi
         if($response->successful()) {
             return collect($response->object()->ResponseShipments)->first();
         } else {
-            abort(500, 'PostNL API Error: '.$response->object()->ErrorMessage->Description);
+            abort(500, 'PostNL API Error: '.collect($response->object()->ResponseShipments)->first());
         }
 
     }
