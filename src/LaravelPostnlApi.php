@@ -190,7 +190,7 @@ class LaravelPostnlApi
         $response = Http::withHeaders([
             'apikey' => config('postnl-api.api.key'),
             'Content-Type' => 'application/json'
-        ])->post(env('POSTNL_API_BASE_URL').'shipment/v2_2/confirm',
+        ])->post(env('POSTNL_API_BASE_URL').'shipment/v2/confirm',
         [
             'Customer' => $this->customer,
             'Message' => [
@@ -208,10 +208,27 @@ class LaravelPostnlApi
         ]);
 
         if($response->successful()) {
-            return collect($response->object()->ResponseShipments)->first();
+            return $response->object()->ResponseShipments;
         } else {
             abort(500, 'PostNL API Error');
         }
 
+    }
+
+    public function findStatusForShipment(
+        string $barcode = null,
+        string $language = 'NL'
+    )
+    {
+        $response = Http::withHeaders([
+            'apikey' => config('postnl-api.api.key'),
+            'Content-Type' => 'application/json'
+        ])->get(env('POSTNL_API_BASE_URL').'shipment/v2/status/barcode/'.$barcode.'?detail=true&language='.$language);
+
+        if($response->successful()) {
+            return $response->object()->CompleteStatus;
+        } else {
+            abort(500, 'PostNL API Error');
+        }
     }
 }
