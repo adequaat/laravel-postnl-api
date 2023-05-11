@@ -183,15 +183,14 @@ class LaravelPostnlApi
         array  $contact = null,
         string $productCodeDelivery = '3085',
         string $reference = null,
-        string $remark = null,
-        bool   $fullLabel = false
+        string $remark = null
     )
     {
 
         $response = Http::withHeaders([
             'apikey' => config('postnl-api.api.key'),
             'Content-Type' => 'application/json'
-        ])->post(env('POSTNL_API_BASE_URL').'shipment/v2_2/label',
+        ])->post(env('POSTNL_API_BASE_URL').'shipment/v2_2/confirm',
         [
             'Customer' => $this->customer,
             'Message' => [
@@ -208,13 +207,9 @@ class LaravelPostnlApi
             ],
         ]);
 
-        $responseShipments = collect($response->object()->ResponseShipments)->first();
-
-        if($fullLabel) {
-            return $responseShipments;
+        if($response->successful()) {
+            return collect($response->object()->ResponseShipments)->first();
         }
-
-        return collect($responseShipments->Labels)->first()->Content;
 
     }
 }
