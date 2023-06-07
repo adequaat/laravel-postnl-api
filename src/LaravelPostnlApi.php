@@ -210,7 +210,7 @@ class LaravelPostnlApi
         if($response->successful()) {
             return $response->object()->ResponseShipments;
         } else {
-            abort(500, 'PostNL API Error');
+            abort(500, 'PostNL API Error: '. $response);
         }
 
     }
