@@ -64,9 +64,10 @@ class LaravelPostnlApi
         array  $address = null,
         array  $contact = null,
         string $productCodeDelivery = '3085',
+        string $deliveryDate = null,
         string $reference = null,
         string $remark = null,
-        bool   $fullLabel = false
+        bool   $fullLabel = false,
     )
     {
 
@@ -84,6 +85,7 @@ class LaravelPostnlApi
                 'Addresses' => $address,
                 'Contacts' => $contact,
                 'ProductCodeDelivery' => $productCodeDelivery,
+                'DeliveryDate' => $deliveryDate,
                 'Barcode' => $barcode,
                 'Reference' => $reference,
                 'Remark' => $remark,
@@ -116,6 +118,7 @@ class LaravelPostnlApi
         array  $address = null,
         array  $contact = null,
         string $productCodeDelivery = '3085',
+        string $deliveryDate = null,
         string $reference = null,
         string $remark = null,
     )
@@ -129,6 +132,7 @@ class LaravelPostnlApi
                 'Addresses' => $address,
                 'Contacts' => $contact,
                 'ProductCodeDelivery' => $productCodeDelivery,
+                'DeliveryDate' => $deliveryDate,
                 'Barcode' => $barcode,
                 'Reference' => $reference,
                 'Remark' => $remark,
@@ -182,6 +186,7 @@ class LaravelPostnlApi
         array  $address = null,
         array  $contact = null,
         string $productCodeDelivery = '3085',
+        string $devilveryDate = null,
         string $reference = null,
         string $remark = null
     )
@@ -201,6 +206,7 @@ class LaravelPostnlApi
                 'Addresses' => $address,
                 'Contacts' => $contact,
                 'ProductCodeDelivery' => $productCodeDelivery,
+                'DeliveryDate' => $devilveryDate,
                 'Barcode' => $barcode,
                 'Reference' => $reference,
                 'Remark' => $remark,
@@ -226,7 +232,7 @@ class LaravelPostnlApi
         ])->get(env('POSTNL_API_BASE_URL').'shipment/v2/status/barcode/'.$barcode.'?detail=true&language='.$language);
 
         if($response->successful()) {
-            return $response->object()->CompleteStatus;
+            return $response->object();
         } else {
             abort(500, 'PostNL API Error');
         }
