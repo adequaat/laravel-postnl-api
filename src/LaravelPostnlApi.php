@@ -71,28 +71,31 @@ class LaravelPostnlApi
         bool   $fullLabel = false,
     )
     {
-
-        $response = Http::withHeaders([
-            'apikey' => config('postnl-api.api.key'),
-            'Content-Type' => 'application/json'
-        ])->post(env('POSTNL_API_BASE_URL').'shipment/v2_2/label',
-        [
-            'Customer' => $this->customer,
-            'Message' => [
-                'MessageTimeStamp' => Carbon::now()->format('dd-mm-yyyy hh:mm:ss'),
-                'Printertype' => $printertype,
-            ],
-            'Shipments' => [
-                'Addresses' => $address,
-                'Contacts' => $contact,
-                'ProductCodeDelivery' => $productCodeDelivery,
-                'ProductOptions' => $productOptions,
-                'DeliveryDate' => $deliveryDate,
-                'Barcode' => $barcode,
-                'Reference' => $reference,
-                'Remark' => $remark,
-            ],
-        ]);
+        try {
+            $response = Http::withHeaders([
+                'apikey' => config('postnl-api.api.key'),
+                'Content-Type' => 'application/json'
+            ])->post(env('POSTNL_API_BASE_URL').'shipment/v2_2/label',
+                [
+                    'Customer' => $this->customer,
+                    'Message' => [
+                        'MessageTimeStamp' => Carbon::now()->format('dd-mm-yyyy hh:mm:ss'),
+                        'Printertype' => $printertype,
+                    ],
+                    'Shipments' => [
+                        'Addresses' => $address,
+                        'Contacts' => $contact,
+                        'ProductCodeDelivery' => $productCodeDelivery,
+                        'ProductOptions' => $productOptions,
+                        'DeliveryDate' => Carbon::parse($deliveryDate)->format('d-m-Y H:i:s'),
+                        'Barcode' => $barcode,
+                        'Reference' => $reference,
+                        'Remark' => $remark,
+                    ],
+                ]);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
 
         $responseShipments = collect($response->object()->ResponseShipments)->first();
 
@@ -136,7 +139,7 @@ class LaravelPostnlApi
                 'Contacts' => $contact,
                 'ProductCodeDelivery' => $productCodeDelivery,
                 'ProductOptions' => $productOptions,
-                'DeliveryDate' => $deliveryDate,
+                'DeliveryDate' => Carbon::parse($deliveryDate)->format('d-m-Y H:i:s'),
                 'Barcode' => $barcode,
                 'Reference' => $reference,
                 'Remark' => $remark,
