@@ -97,13 +97,18 @@ class LaravelPostnlApi
             return $e->getMessage();
         }
 
-        $responseShipments = collect($response->object()->ResponseShipments)->first();
+        if($response->object() && $response->object()->ResponseShipments) {
+            $responseShipments = collect($response->object()->ResponseShipments)->first();
 
-        if($fullLabel) {
-            return $responseShipments;
+            if($fullLabel) {
+                return $responseShipments;
+            }
+
+            return collect($responseShipments->Labels)->first()->Content;
+
+        } else {
+            return Exception('PostNL API Error: '. $response->object());
         }
-
-        return collect($responseShipments->Labels)->first()->Content;
 
     }
 
@@ -194,7 +199,7 @@ class LaravelPostnlApi
         array  $contact = null,
         string $productCodeDelivery = '3085',
         array  $productOptions = null,
-        string $devilveryDate = null,
+        string $deliveryDate = null,
         string $reference = null,
         string $remark = null
     )
@@ -215,7 +220,7 @@ class LaravelPostnlApi
                 'Contacts' => $contact,
                 'ProductCodeDelivery' => $productCodeDelivery,
                 'ProductOptions' => $productOptions,
-                'DeliveryDate' => $devilveryDate,
+                'DeliveryDate' => Carbon::parse($deliveryDate)->format('d-m-Y H:i:s'),
                 'Barcode' => $barcode,
                 'Reference' => $reference,
                 'Remark' => $remark,
