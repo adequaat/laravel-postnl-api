@@ -149,7 +149,7 @@ class LaravelPostnlApi
                 'Reference' => $reference,
                 'Remark' => $remark,
                 'Groups' => [
-                    'GroupSequence' => $index,
+                    'GroupSequence' => $index + 1,
                     'GroupType' => '03',
                     'GroupCount' => count($barcodes),
                     'MainBarcode' => $barcodes[0],
