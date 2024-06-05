@@ -2,6 +2,10 @@
 
 All notable changes to `laravel-postnl-api` will be documented in this file.
 
+## v1.0.15 - 2024-06-05
+
+**Full Changelog**: https://github.com/adequaat/laravel-postnl-api/compare/v1.0.14...v1.0.15
+
 ## v1.0.14 - 2024-01-31
 
 **Full Changelog**: https://github.com/adequaat/laravel-postnl-api/compare/v1.0.13...v1.0.14
