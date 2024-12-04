@@ -97,17 +97,18 @@ class LaravelPostnlApi
             return $e->getMessage();
         }
 
-        if($response->object() && $response->object()->ResponseShipments) {
-            $responseShipments = collect($response->object()->ResponseShipments)->first();
+        $responseObject = $response->object();
 
-            if($fullLabel) {
+        if ($responseObject && property_exists($responseObject, 'ResponseShipments')) {
+            $responseShipments = collect($responseObject->ResponseShipments)->first();
+
+            if ($fullLabel) {
                 return $responseShipments;
             }
 
             return collect($responseShipments->Labels)->first()->Content;
-
         } else {
-            return Exception('PostNL API Error: '. $response->object());
+            throw new Exception('PostNL API Error: ' . json_encode($responseObject));
         }
 
     }
@@ -157,22 +158,32 @@ class LaravelPostnlApi
             ];
         }
 
-        $response = Http::withHeaders([
-            'apikey' => config('postnl-api.api.key'),
-            'Content-Type' => 'application/json'
-        ])->post(env('POSTNL_API_BASE_URL').'shipment/v2_2/label',
-        [
-            'Customer' => $this->customer,
-            'Message' => [
-                'MessageTimeStamp' => Carbon::now()->format('dd-mm-yyyy hh:mm:ss'),
-                'Printertype' => $printertype,
-            ],
-            'Shipments' => $shipments
-        ]);
+        try {
+            $response = Http::withHeaders([
+                'apikey' => config('postnl-api.api.key'),
+                'Content-Type' => 'application/json'
+            ])->post(env('POSTNL_API_BASE_URL') . 'shipment/v2_2/label',
+                [
+                    'Customer' => $this->customer,
+                    'Message' => [
+                        'MessageTimeStamp' => Carbon::now()->format('dd-mm-yyyy hh:mm:ss'),
+                        'Printertype' => $printertype,
+                    ],
+                    'Shipments' => $shipments
+                ]);
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
 
-        $responseShipments = collect($response->object()->ResponseShipments);
+        $responseObject = $response->object();
 
-        return $responseShipments;
+        if ($responseObject && property_exists($responseObject, 'ResponseShipments')) {
+            $responseShipments = collect($responseObject->ResponseShipments);
+
+            return $responseShipments;
+        } else {
+            throw new Exception('PostNL API Error for multicollo: ' . json_encode($responseObject));
+        }
 
     }
 
@@ -204,7 +215,6 @@ class LaravelPostnlApi
         string $remark = null
     )
     {
-
         $response = Http::withHeaders([
             'apikey' => config('postnl-api.api.key'),
             'Content-Type' => 'application/json'
