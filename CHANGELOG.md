@@ -2,6 +2,16 @@
 
 All notable changes to `laravel-postnl-api` will be documented in this file.
 
+## v1.0.16 - 2024-12-04
+
+### What's Changed
+
+* chore: more descriptive and safe error handling by @sytheveenje in https://github.com/adequaat/laravel-postnl-api/pull/9
+* chore(deps): bump actions/checkout from 3 to 4 by @dependabot in https://github.com/adequaat/laravel-postnl-api/pull/7
+* chore(deps): bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/adequaat/laravel-postnl-api/pull/8
+
+**Full Changelog**: https://github.com/adequaat/laravel-postnl-api/compare/v1.0.15...v1.0.16
+
 ## v1.0.15 - 2024-06-05
 
 **Full Changelog**: https://github.com/adequaat/laravel-postnl-api/compare/v1.0.14...v1.0.15
