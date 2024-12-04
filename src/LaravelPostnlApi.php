@@ -4,6 +4,7 @@ namespace Adequaat\LaravelPostnlApi;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use Exception;
 
 class LaravelPostnlApi
 {
